@@ -3,39 +3,50 @@
 //Extended repeater
 //Vigenere cipher
 
-const chainMaker = {
-  chains: [],
-  getLength() {
-    return this.chains.length;
-  },
-  addLink(value) {
-    if (value === undefined) return this.chains.push("(  )~~");
-    this.chains.push(`( ${String(value)} )~~`);
-    return this;
-  },
-  removeLink(position) {
-    if (
-      !Number.isInteger(position) ||
-      typeof position !== "number" ||
-      position <= 0 ||
-      position >= this.chains.length
-    ) {
-      this.chains = [];
-      throw new Error("You can't remove incorrect link!");
-    }
-    this.chains.splice(position - 1, 1);
-    return this;
-  },
-  reverseChain() {
-    this.chains.reverse();
-    return this;
-  },
-  finishChain() {
-    let chainString = this.chains.join("");
-    this.chains = [];
-    return chainString.slice(0, chainString.length - 2);
-  },
-};
+class DepthCalculator {
+  calculateDepth(arr) {
+    //   const res = {};
+    //   if (!arr) {
+    //     return 1;
+    //   }
+    //   if (!Array.isArray(arr)) {
+    //     return res;
+    //   }
+    //   for (let i = 0; i < arr.length; i++) {
+    //     let count = 0;
+    //     if (Array.isArray(arr[i])) {
+    //       res = { count: count++ };
+    //       return this.calculateDepth(arr[i]);
+    //     }
+    //   }
+    //   return res;
+    // }
 
-console.log(chainMaker.addLink(1).addLink(2).addLink(3).removeLink(4));
-console.log(chainMaker);
+    let count = 1;
+    for (let i = 0; i < arr.length; i++) {
+      let currentDepth;
+      if (Array.isArray(arr[i])) {
+        currentDepth = 1 + this.calculateDepth(arr[i]);
+      } else {
+        currentDepth = 1;
+      }
+      if (currentDepth > count) {
+        count = currentDepth;
+      }
+    }
+    return count;
+  }
+}
+
+const depthCalc = new DepthCalculator();
+
+console.log(
+  depthCalc.calculateDepth([
+    1,
+    2,
+    3,
+    [4, 5, [6, 7, [8, 9], 10, 11], 12],
+    13,
+    14,
+  ])
+);
